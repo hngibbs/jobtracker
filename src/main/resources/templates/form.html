@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Job Form</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Job Application Details</h1>
+        <p>Add or update an opportunity in your job search tracker.</p>
+    </div>
+
+    <div class="card">
+
+        <form th:action="@{/save}" th:object="${job}" method="post">
+
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Company</label>
+                    <input type="text" th:field="*{company}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Role</label>
+                    <input type="text" th:field="*{role}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select th:field="*{status}">
+                        <option value="Applied">Applied</option>
+                        <option value="Screening">Screening</option>
+                        <option value="Interviewing">Interviewing</option>
+                        <option value="Offer">Offer</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <select th:field="*{remoteType}">
+                        <option value="Remote">Remote</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="On-site">On-site</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Salary Range</label>
+                    <input type="text" th:field="*{salaryRange}" placeholder="$25/hr or $50,000-$60,000">
+                </div>
+
+                <div class="form-group">
+                    <label>Date Applied</label>
+                    <input type="date" th:field="*{dateApplied}">
+                </div>
+
+                <div class="form-group">
+                    <label>Follow Up Date</label>
+                    <input type="date" th:field="*{followUpDate}">
+                </div>
+
+                <div class="form-group full">
+                    <label>Notes</label>
+                    <textarea th:field="*{notes}" placeholder="Add interview notes, contact names, next steps, or reminders."></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button class="button" type="submit">Save Application</button>
+                <a class="button secondary" href="/">Cancel</a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

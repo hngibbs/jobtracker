@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Job Tracker</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Job Application Tracker</h1>
+        <p>Keep track of applications, follow-ups, and where each opportunity stands.</p>
+    </div>
+
+    <div class="card">
+
+        <div class="top-row">
+            <h2>My Applications</h2>
+            <a class="button" href="/new">+ Add New Job</a>
+        </div>
+
+        <div class="filters">
+            <input type="text" id="searchInput" placeholder="Search company or role...">
+
+            <select id="statusFilter">
+                <option value="">All Statuses</option>
+                <option value="Applied">Applied</option>
+                <option value="Screening">Screening</option>
+                <option value="Interviewing">Interviewing</option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+
+            <select id="locationFilter">
+                <option value="">All Locations</option>
+                <option value="Remote">Remote</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="On-site">On-site</option>
+            </select>
+        </div>
+
+        <table>
+            <tr>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Location</th>
+                <th>Salary Range</th>
+                <th>Date Applied</th>
+                <th>Follow Up</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(jobs)}">
+                <td colspan="9" class="empty-message">No job applications yet. Add your first one!</td>
+            </tr>
+
+            <tr th:each="job : ${jobs}" class="job-row">
+                <td th:text="${job.company}"></td>
+                <td th:text="${job.role}"></td>
+                <td><span class="badge" th:text="${job.status}"></span></td>
+                <td th:text="${job.remoteType}"></td>
+                <td th:text="${job.salaryRange}"></td>
+                <td th:text="${job.dateApplied}"></td>
+                <td th:text="${job.followUpDate}"></td>
+                <td th:text="${job.notes}"></td>
+                <td class="actions">
+                    <a class="button secondary" th:href="@{'/edit/' + ${job.id}}">Edit</a>
+                    <a class="button danger" th:href="@{'/delete/' + ${job.id}}">Delete</a>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+    const locationFilter = document.getElementById("locationFilter");
+
+    function filterJobs() {
+        const searchText = searchInput.value.toLowerCase();
+        const selectedStatus = statusFilter.value;
+        const selectedLocation = locationFilter.value;
+
+        const rows = document.querySelectorAll(".job-row");
+
+        rows.forEach(row => {
+            const company = row.children[0].innerText.toLowerCase();
+            const role = row.children[1].innerText.toLowerCase();
+            const status = row.children[2].innerText;
+            const location = row.children[3].innerText;
+
+            const matchesSearch = company.includes(searchText) || role.includes(searchText);
+            const matchesStatus = selectedStatus === "" || status === selectedStatus;
+            const matchesLocation = selectedLocation === "" || location === selectedLocation;
+
+            if (matchesSearch && matchesStatus && matchesLocation) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    searchInput.addEventListener("input", filterJobs);
+    statusFilter.addEventListener("change", filterJobs);
+    locationFilter.addEventListener("change", filterJobs);
+</script>
+
+</body>
+</html>
